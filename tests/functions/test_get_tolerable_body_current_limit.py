@@ -10,7 +10,7 @@ class GetTolerableBodyCurrentLimitTest(TestCase):
             exposure_time,
             use_50kgs_model=False
         )
-        self.assertAlmostEquals(current_limit, 0.2220315292925759)
+        self.assertAlmostEqual(current_limit, 0.2220315292925759)
 
     def test_sample_from_textbook_with_50kgs(self):
         exposure_time = 0.5
@@ -18,7 +18,7 @@ class GetTolerableBodyCurrentLimitTest(TestCase):
             exposure_time,
             use_50kgs_model=True
         )
-        self.assertAlmostEquals(current_limit, 0.16404877323527903)
+        self.assertAlmostEqual(current_limit, 0.16404877323527903)
 
     def test_small_exposure_time(self):
         with self.assertRaises(ValueError):
