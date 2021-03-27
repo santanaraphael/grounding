@@ -1,8 +1,13 @@
 import math
 from typing import Tuple
+
 from grounding.constants import HUMAM_BODY_RESISTANCE
-from grounding.functions.get_tolerable_body_current_limit import get_tolerable_body_current_limit
-from grounding.functions.get_insulation_correction_factor import get_insulation_correction_factor
+from grounding.functions.get_insulation_correction_factor import (
+    get_insulation_correction_factor,
+)
+from grounding.functions.get_tolerable_body_current_limit import (
+    get_tolerable_body_current_limit,
+)
 
 
 def get_maximum_step_voltage(
@@ -11,7 +16,8 @@ def get_maximum_step_voltage(
     surface_material_resistivity: float,
 ) -> float:
     return (
-        HUMAM_BODY_RESISTANCE + 6.0 * insulation_correction_factor * surface_material_resistivity
+        HUMAM_BODY_RESISTANCE
+        + 6.0 * insulation_correction_factor * surface_material_resistivity
     ) * maximum_tolerable_current
 
 
@@ -21,7 +27,8 @@ def get_maximum_touch_voltage(
     surface_material_resistivity: float,
 ) -> float:
     return (
-        HUMAM_BODY_RESISTANCE + 1.5 * insulation_correction_factor * surface_material_resistivity
+        HUMAM_BODY_RESISTANCE
+        + 1.5 * insulation_correction_factor * surface_material_resistivity
     ) * maximum_tolerable_current
 
 
@@ -34,16 +41,13 @@ def get_maximum_voltage_limits(
 ) -> Tuple[float, float]:
 
     maximum_tolerable_current = get_tolerable_body_current_limit(
-        exposure_duration=shock_duration,
-        use_50kgs_model=use_50kgs_model
+        exposure_duration=shock_duration, use_50kgs_model=use_50kgs_model
     )
 
     if insulating_layer_resistivity and insulating_layer_thickness:
 
         insulation_correction_factor = get_insulation_correction_factor(
-            ground_resistivity,
-            insulating_layer_resistivity,
-            insulating_layer_thickness
+            ground_resistivity, insulating_layer_resistivity, insulating_layer_thickness
         )
         surface_material_resistivity = insulating_layer_resistivity
     else:
