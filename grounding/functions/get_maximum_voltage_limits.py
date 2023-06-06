@@ -1,7 +1,6 @@
-import math
 from typing import Tuple
 
-from grounding.constants import HUMAM_BODY_RESISTANCE
+from grounding.constants import HUMAN_BODY_RESISTANCE
 from grounding.functions.get_insulation_correction_factor import (
     get_insulation_correction_factor,
 )
@@ -16,7 +15,7 @@ def get_maximum_step_voltage(
     surface_material_resistivity: float,
 ) -> float:
     return (
-        HUMAM_BODY_RESISTANCE
+        HUMAN_BODY_RESISTANCE
         + 6.0 * insulation_correction_factor * surface_material_resistivity
     ) * maximum_tolerable_current
 
@@ -27,7 +26,7 @@ def get_maximum_touch_voltage(
     surface_material_resistivity: float,
 ) -> float:
     return (
-        HUMAM_BODY_RESISTANCE
+        HUMAN_BODY_RESISTANCE
         + 1.5 * insulation_correction_factor * surface_material_resistivity
     ) * maximum_tolerable_current
 
