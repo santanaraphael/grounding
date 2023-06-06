@@ -2,5 +2,5 @@ from enum import Enum
 
 
 class SupportabilityConstant(Enum):
-    USE_50_KGS = 0.116
-    USE_70_KGS = 0.157
+    FOR_50_KGS = 0.116
+    FOR_70_KGS = 0.157
