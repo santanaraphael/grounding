@@ -1,6 +1,7 @@
 from typing import Tuple
 
 from grounding.constants import HUMAN_BODY_RESISTANCE
+from grounding.enums import SupportabilityConstant
 from grounding.functions.get_insulation_correction_factor import (
     get_insulation_correction_factor,
 )
@@ -10,58 +11,64 @@ from grounding.functions.get_tolerable_body_current_limit import (
 
 
 def get_maximum_step_voltage(
-    maximum_tolerable_current: float,
+    tolerable_body_current_limit: float,
     insulation_correction_factor: float,
     surface_material_resistivity: float,
 ) -> float:
+    """
+    Equations (29) and (30) from the reference guide
+    """
     return (
         HUMAN_BODY_RESISTANCE
         + 6.0 * insulation_correction_factor * surface_material_resistivity
-    ) * maximum_tolerable_current
+    ) * tolerable_body_current_limit
 
 
 def get_maximum_touch_voltage(
-    maximum_tolerable_current: float,
+    tolerable_body_current_limit: float,
     insulation_correction_factor: float,
     surface_material_resistivity: float,
 ) -> float:
+    """
+    Equations (32) and (33) from the reference guide
+    """
     return (
         HUMAN_BODY_RESISTANCE
         + 1.5 * insulation_correction_factor * surface_material_resistivity
-    ) * maximum_tolerable_current
+    ) * tolerable_body_current_limit
 
 
 def get_maximum_voltage_limits(
-    shock_duration: float,
+    current_expose_duration: float,
     ground_resistivity: float,
-    insulating_layer_resistivity: float = 0,
-    insulating_layer_thickness: float = 0,
-    use_50kgs_model: bool = False,
+    insulation_layer_resistivity: float = 0,
+    insulation_layer_thickness: float = 0,
+    supportability_constant: SupportabilityConstant = SupportabilityConstant.FOR_70_KGS,
 ) -> Tuple[float, float]:
 
-    maximum_tolerable_current = get_tolerable_body_current_limit(
-        exposure_duration=shock_duration, use_50kgs_model=use_50kgs_model
+    tolerable_body_current_limit = get_tolerable_body_current_limit(
+        current_exposure_duration=current_expose_duration,
+        supportability_constant=supportability_constant,
     )
 
-    if insulating_layer_resistivity and insulating_layer_thickness:
+    if insulation_layer_resistivity and insulation_layer_thickness:
 
         insulation_correction_factor = get_insulation_correction_factor(
-            ground_resistivity, insulating_layer_resistivity, insulating_layer_thickness
+            ground_resistivity, insulation_layer_resistivity, insulation_layer_thickness
         )
-        surface_material_resistivity = insulating_layer_resistivity
+        surface_material_resistivity = insulation_layer_resistivity
     else:
-
         insulation_correction_factor = 1.0
         surface_material_resistivity = ground_resistivity
 
     step_voltage = get_maximum_step_voltage(
-        maximum_tolerable_current,
+        tolerable_body_current_limit,
         insulation_correction_factor,
         surface_material_resistivity,
     )
 
     touch_voltage = get_maximum_touch_voltage(
-        maximum_tolerable_current,
+        tolerable_body_current_limit,
         insulation_correction_factor,
         surface_material_resistivity,
     )
